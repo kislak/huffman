@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "statistics.h"
 
+// long
 int statistics[256] = {0};
 int order[256] = {0};
 int map[256] = {0};
@@ -56,7 +57,6 @@ int main(int argc, char** argv) {
         
         create_archive(argv[3]);
         
-        // check
         for (i = 0; i < 256; i++)
         {
             if (map[i]){
@@ -119,7 +119,8 @@ void create_archive(char *fname){
    int i;
    
    for (i = 0; i < 256; i++) {
-        fputc(map[i], pFile);
+//        fputc(map[i], pFile);
+        fwrite(&map[i], sizeof(int), 1, pFile);
         fputc(statistics[i], pFile);
    };
    
@@ -136,15 +137,17 @@ node * extract_tree(char *fname){
     if (pFile == NULL) perror("Error opening file");
     else {
            for (i = 0; i < 256; i++) {
-             c = fgetc(pFile);
-             map[i] = c;
+//             c = fgetc(pFile);
+//             map[i] = c;
+             fread(&map[i], sizeof(int), 1, pFile);
+             
              c = fgetc(pFile);
              statistics[i] = c;
+             
            };
            fclose(pFile);
     };
     
-    // check
     for (i = 0; i < 256; i++)
     {
         if (map[i]){
